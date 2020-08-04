@@ -7,8 +7,8 @@
 #include "game.hpp"
 
 mem::process_t cstrike::process;
-mem::moduleinfo_t cstrike::modules::hw;
-mem::moduleinfo_t cstrike::modules::client;
+mem::module_t cstrike::modules::hw;
+mem::module_t cstrike::modules::client;
 
 bool is_key_down(KeySym key)
 {
@@ -26,9 +26,9 @@ int main()
     std::cout << "<< cstrike_bhop by rdbo >>" << std::endl;
     std::cout << "[*] initializing..." << std::endl;
     cstrike::process = mem::ex::get_process("hl_linux");
-    cstrike::modules::hw = mem::ex::get_module_info(cstrike::process, "hw.so");
-    cstrike::modules::client = mem::ex::get_module_info(cstrike::process, "/client.so");
-    if(cstrike::modules::hw.base == (mem::voidptr_t)-1 || cstrike::modules::client.base == (mem::voidptr_t)-1)
+    cstrike::modules::hw = mem::ex::get_module(cstrike::process, "/hw.so\n");
+    cstrike::modules::client = mem::ex::get_module(cstrike::process, "/client.so\n");
+    if(!cstrike::process.is_valid() || !cstrike::modules::hw.is_valid() || !cstrike::modules::client.is_valid())
     {
         std::cout << "[!] unable to load game modules" << std::endl;
         return -1;
@@ -39,13 +39,15 @@ int main()
 
     std::cout << "[*] cstrike::modules::client" << std::endl;
     std::cout << "    name: " << cstrike::modules::client.name << std::endl;
+    std::cout << "    path: " << cstrike::modules::client.path << std::endl;
     std::cout << "    base: " << cstrike::modules::client.base << std::endl;
-    std::cout << "    end: " << cstrike::modules::client.end << std::endl;
+    std::cout << "    end:  " << cstrike::modules::client.end << std::endl;
 
     std::cout << "[*] cstrike::modules::hw" << std::endl;
     std::cout << "    name: " << cstrike::modules::hw.name << std::endl;
     std::cout << "    base: " << cstrike::modules::hw.base << std::endl;
-    std::cout << "    end: " << cstrike::modules::hw.end << std::endl;
+    std::cout << "    base: " << cstrike::modules::hw.base << std::endl;
+    std::cout << "    end:  " << cstrike::modules::hw.end << std::endl;
 
     std::cout << "[*] initialized" << std::endl;
 
